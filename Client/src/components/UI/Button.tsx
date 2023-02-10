@@ -1,10 +1,12 @@
 import MButton from "@mui/material/Button";
 const Button: React.FC<{
   text: string;
+  type?: any;
   onClick?: () => void;
 }> = (props) => {
   return (
     <MButton
+      type={props.type}
       onClick={props.onClick}
       className="h-12 w-24"
       variant="contained"

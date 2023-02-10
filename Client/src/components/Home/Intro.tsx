@@ -22,7 +22,7 @@ const Home = () => {
           onClick2={signUp}
         />
         <div className="flex mx-28 my-auto justify-between">
-          <div className="flex flex-col justify-center pb-9">
+          <div className="flex flex-col justify-center pb-14">
             <h4 className="text-highlight font-ubuntu my-4">
               Project Management
             </h4>

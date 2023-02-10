@@ -8,6 +8,7 @@ module.exports = {
         secondary: "#40CCCC",
         backdrop: "#000000bf",
         highlight: "#ADADAD",
+        background: "#222123",
       },
       fontFamily: {
         ptsans: ["PT Serif", "serif"],
