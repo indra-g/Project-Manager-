@@ -8,7 +8,7 @@ const Button: React.FC<{
     <MButton
       type={props.type}
       onClick={props.onClick}
-      className="h-12 w-24"
+      className="h-12 w-26"
       variant="contained"
       style={{
         backgroundColor: "#222123",

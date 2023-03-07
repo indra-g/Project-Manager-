@@ -9,7 +9,7 @@ import {
   InputAdornment,
   OutlinedInput,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../UI/Button";
 const Loginform = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -27,10 +27,15 @@ const Loginform = () => {
     }
     return false;
   };
+  const navigate = useNavigate();
+  const goHome = () => {
+    navigate("/home");
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Logged In");
+    goHome();
     return;
   };
   return (
@@ -44,7 +49,7 @@ const Loginform = () => {
           className="w-full mt-6"
           label="Email"
           name="email"
-          required={true}
+          // required={true}
         />
         <FormControl sx={{ width: "100%" }} variant="outlined">
           <InputLabel className="mt-6" htmlFor="outlined-adornment-password">
@@ -57,7 +62,7 @@ const Loginform = () => {
             className="w-full mt-6"
             name="password"
             label="Password"
-            required={true}
+            // required={true}
             type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
