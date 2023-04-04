@@ -7,16 +7,20 @@ import SignUp2 from "./pages/Signupsecond";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import MainScreen from "./pages/MainScreen";
+import StartAProject from "./pages/StartAProject"
+import { useSelector } from "react-redux";
 
 const App: React.FC = () => {
+  const isAuth = useSelector((state: any) => state.isAuthenticated);
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/home" element={<MainScreen />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signUp" element={<SignUp1 />} />
-      <Route path="/signUpCont" element={<SignUp2 />} />
-      <Route path="/forgotPass" element={<ForgotPassword />} />
+      {!isAuth && <Route path="/" element={<Home />} />}
+      {isAuth && <Route path="/home" element={<MainScreen />} />}
+      {isAuth && <Route path="/startAProject" element={<StartAProject />} />}
+      {!isAuth && <Route path="/login" element={<Login />} />}
+      {!isAuth && <Route path="/signUp" element={<SignUp1 />} />}
+      {isAuth && <Route path="/signUpCont" element={<SignUp2 />} />}
+      {!isAuth && <Route path="/forgotPass" element={<ForgotPassword />} />}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

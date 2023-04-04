@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Visibility from "@mui/icons-material/Visibility";
 import InputLabel from "@mui/material/InputLabel";
@@ -11,7 +11,16 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../UI/Button";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../../store/auth-slice";
+
 const SignUpForm = () => {
+  const dispatch = useDispatch();
+  const [enteredEmail, setEnteredEmail] = useState();
+  const [enteredPass, setEnteredPass] = useState();
+  const [enteredCPass, setEnteredCPass] = useState();
+  const [error, setError] = useState<any>();
   const [showPassword, setShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const signUpCont = () => {
@@ -26,9 +35,33 @@ const SignUpForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Uploaded Email and pass");
-    signUpCont();
+    if (enteredCPass !== enteredPass) {
+      setError("Please Check the password");
+      return;
+    }
+    const signUpDetails = { Email: enteredEmail, Password: enteredPass };
+    axios
+      .post("api/signUp", signUpDetails)
+      .then((response) => {
+        console.log(response.data);
+        dispatch(authActions.login(response.data));
+        signUpCont();
+      })
+      .catch((e) => {
+        console.log(e.response.data.errorMessage);
+        setError(e.response.data.errorMessage);
+      });
     return;
+  };
+
+  const handleEmailChange = (e: any) => {
+    setEnteredEmail(e.target.value);
+  };
+  const handlePassChange = (e: any) => {
+    setEnteredPass(e.target.value);
+  };
+  const handleCPassChange = (e: any) => {
+    setEnteredCPass(e.target.value);
   };
   return (
     <>
@@ -36,11 +69,11 @@ const SignUpForm = () => {
         <TextField
           sx={{ input: { color: "white" } }}
           type={"email"}
-          // value={enteredEmail}
           placeholder="Hello1234@gmail.com"
           className="w-full mt-6"
           label="Email"
           name="email"
+          onChange={handleEmailChange}
           required={true}
         />
         <FormControl sx={{ width: "100%" }} variant="outlined">
@@ -49,13 +82,13 @@ const SignUpForm = () => {
           </InputLabel>
           <OutlinedInput
             sx={{ input: { color: "white" } }}
-            //   value={enteredPassword}
             placeholder="Enter your password"
             className="w-full mt-6"
             name="password"
             label="Password"
             required={true}
             type={showPassword ? "text" : "password"}
+            onChange={handlePassChange}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -78,18 +111,19 @@ const SignUpForm = () => {
             </InputLabel>
             <OutlinedInput
               sx={{ input: { color: "white" } }}
-              //   value={enteredPassword}
               placeholder="Confirm your password"
               className="mt-6"
               name="confirmPassword"
               label="confirm your password"
               required={true}
               type="password"
+              onChange={handleCPassChange}
             />
           </FormControl>
         </div>
+        <h1 className="mt-2 text-red-600">{error}</h1>
         <span className="w-100">
-          <hr className="underline underline-offset-4 mt-12" />
+          <hr className="underline underline-offset-4 mt-6" />
         </span>
         <div className="flex items-center mt-8 justify-between text-white font-ubuntu">
           <span>

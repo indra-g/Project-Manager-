@@ -1,13 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../UI/Button";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { authActions } from "../../../store/auth-slice";
 const SignUpform2 = () => {
+  const dispatch = useDispatch();
+  const userId = useSelector((state: any) => state.user_UID);
+  const email = useSelector((state: any) => state.email);
+  const [enteredFName, setFName] = useState();
+  const [enteredLName, setLName] = useState();
+  const [phoneNo, setphoneNo] = useState();
+  const navigate = useNavigate();
+  const goHome = () => {
+    navigate("/home");
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Signed Up");
+    const signUpDetails = {
+      userId,
+      email,
+      firstName: enteredFName,
+      lastName: enteredLName,
+      phoneNo,
+    };
+    axios
+      .post("api/signUp/details", signUpDetails)
+      .then((res) => {
+        dispatch(authActions.signUp(signUpDetails));
+        goHome();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
     return;
   };
+  const handleFname = (e: any) => {
+    setFName(e.target.value);
+  };
+  const handleLname = (e: any) => {
+    setLName(e.target.value);
+  };
+  const handlePhoneNo = (e: any) => {
+    setphoneNo(e.target.value);
+  };
+
   return (
     <>
       <form className="mt-8 pb-14" onSubmit={handleSubmit}>
@@ -18,6 +57,7 @@ const SignUpform2 = () => {
           className="w-full mt-6"
           label="First Name"
           name="fName"
+          onChange={handleFname}
           required={true}
         />
         <div className="mt-6">
@@ -28,6 +68,7 @@ const SignUpform2 = () => {
             className="w-full mt-6"
             label="Last Name"
             name="lName"
+            onChange={handleLname}
             required={true}
           />
         </div>
@@ -39,6 +80,7 @@ const SignUpform2 = () => {
             className="w-full mt-6"
             label="Phone Number"
             name="PNumber"
+            onChange={handlePhoneNo}
             required={true}
           />
         </div>

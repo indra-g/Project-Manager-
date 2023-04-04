@@ -1,6 +1,6 @@
 import MButton from "@mui/material/Button";
 const Button: React.FC<{
-  text: string;
+  text?: string;
   type?: any;
   onClick?: () => void;
 }> = (props) => {

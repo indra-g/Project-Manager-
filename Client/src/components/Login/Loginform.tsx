@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Visibility from "@mui/icons-material/Visibility";
 import InputLabel from "@mui/material/InputLabel";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import axios from "axios";
 import {
   FormControl,
   IconButton,
@@ -11,7 +12,13 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../UI/Button";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/auth-slice";
 const Loginform = () => {
+  const dispatch = useDispatch();
+  const [error, setError] = useState(null);
+  const [enteredEmail, setEnteredEmail] = useState();
+  const [enteredPass, setEnteredPass] = useState();
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
@@ -19,23 +26,39 @@ const Loginform = () => {
   ) => {
     event.preventDefault();
   };
-  const checkEmail = (email: string) => {
-    let re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (re.test(email)) {
-      return true;
-    }
-    return false;
-  };
+  // const checkEmail = (email: string) => {
+  //   let re =
+  //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  //   if (re.test(email)) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
   const navigate = useNavigate();
   const goHome = () => {
     navigate("/home");
   };
+  const handlePassChange = (e: any) => {
+    setEnteredPass(e.target.value);
+  };
+  const handleEmailChange = (e: any) => {
+    setEnteredEmail(e.target.value);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logged In");
-    goHome();
+    const loginDetails = { Email: enteredEmail, Password: enteredPass };
+    axios
+      .post("api/login", loginDetails)
+      .then((response) => {
+        console.log(response.data);
+        dispatch(authActions.login(response.data));
+        goHome();
+      })
+      .catch((e) => {
+        console.log(e.response.data.errorMessage);
+        setError(e.response.data.errorMessage);
+      });
     return;
   };
   return (
@@ -49,6 +72,7 @@ const Loginform = () => {
           className="w-full mt-6"
           label="Email"
           name="email"
+          onChange={handleEmailChange}
           // required={true}
         />
         <FormControl sx={{ width: "100%" }} variant="outlined">
@@ -62,6 +86,7 @@ const Loginform = () => {
             className="w-full mt-6"
             name="password"
             label="Password"
+            onChange={handlePassChange}
             // required={true}
             type={showPassword ? "text" : "password"}
             endAdornment={
@@ -79,8 +104,9 @@ const Loginform = () => {
             }
           />
         </FormControl>
+        <h1 className="mt-2 text-red-600">{error}</h1>
         <Link to="/forgotPass">
-          <h1 className="text-right text-white underline underline-offset-3 my-7 font-ubuntu">
+          <h1 className="text-right text-white underline underline-offset-3 mb-7 mt-2 font-ubuntu">
             Forget Password
           </h1>
         </Link>
