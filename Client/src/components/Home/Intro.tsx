@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
 import img from "../../assets/images/Design.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Home = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    try {
+      const response = axios.post("http://localhost:5000/predict", {
+        data: [
+          1.1, 1.4, 1.4, 1.4, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 2.0, 2.0,
+          2.0, 2.0,
+        ],
+      });
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
   const login = () => {
     navigate("/logIn");
   };

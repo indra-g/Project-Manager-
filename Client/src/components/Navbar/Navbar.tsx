@@ -4,6 +4,8 @@ import Button from "../UI/Button";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import classes from "./Navbar.module.css";
+
 const Navbar: React.FC<{
   button1?: string;
   button2?: string;

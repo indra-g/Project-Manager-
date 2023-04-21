@@ -6,7 +6,6 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { collection, addDoc } from "firebase/firestore";
 import firebaseConfig from "../config/firebaseConfig";
 const routes = Express.Router();
 
